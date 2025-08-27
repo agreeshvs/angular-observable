@@ -1,0 +1,15 @@
+.container{
+    margin: auto 50px;
+}
+button{
+    padding: 7px 15px;
+    color: #fff;
+    background-color: #28282B;
+}
+
+.data-list{
+    padding: 10px;
+    background-color: rgb(230, 224, 224);
+    margin: 10px;
+    width: 50%;
+}
