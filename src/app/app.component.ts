@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
-import { from, fromEvent, Observable, of } from 'rxjs';
+import { filter, from, fromEvent, map, Observable, of } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -82,7 +82,7 @@ export class AppComponent implements AfterViewInit{
 
 
 
-    this.myObservable.subscribe({
+    /* this.myObservable.subscribe({
       next:( val: any) =>{
         this.data.push(val);
         console.log(val)
@@ -92,6 +92,47 @@ export class AppComponent implements AfterViewInit{
       },
       complete(){
         alert('All the data is streamed : Complete message');
+      }
+    }) */
+
+    // map function
+    /* this.transformObs.subscribe({
+      next:(val: any) => {
+        this.data.push(val)
+      },
+      error (err){
+        alert('Error in observable');
+      },
+      complete() {
+        // alert('All the data is streamed.')
+      }
+    }) */
+
+    // filter function
+
+    /* this.filteredObs.subscribe({
+      next:(val: any) => {
+        this.data.push(val)
+      },
+      error (err){
+        alert('Error in observable');
+      },
+      complete() {
+        // alert('All the data is streamed.')
+      }
+    }) */
+
+    // Chaning observables
+
+    this.myObservable.subscribe( {
+      next: (val: any)=>{
+        this.data.push(val);
+      },
+      error(err){
+        alert("Error");
+      },
+      complete(){
+        console.log('Completed');
       }
     })
 
@@ -104,27 +145,55 @@ export class AppComponent implements AfterViewInit{
 
   // of() accept multiple parameters, and emit every params.
   // from() emit by iterating the parameter.
-  myObservable = from(this.promise); // Only one parameter. This prameter should be iterable.
+  // myObservable = from(this.promise); // Only one parameter. This prameter should be iterable.
 
 
-  buttonCllicked(){
+  myObservable = from([2,4,6,8,10,12]).pipe( map( (item) => {
+    return item * 5
+  }),filter( (val)=> {
+    return val % 4 === 0;
+  })); 
+
+  // Observable - 2,4,6,8,10,12
+  // Result - 10,20,30,40,50,60
+  
+  // transformObs - 10,20,30,40,50,60
+  /* transformObs = this.myObservable.pipe( map( (val) =>{
+    return val * 5
+  } ))
+
+  filteredObs = this.transformObs.pipe( filter( (val) => {
+    return val % 4 === 0;
+    // will emit the filterd data
+  }))
+
+  chainingObs = this.myObservable.pipe( map( (item) => {
+    return item * 5
+  }),filter( (val)=> {
+    return val % 4 === 0;
+  }))
+ */
+
+
+
+  /* buttonCllicked(){
     this.createButtonObservable = fromEvent(this.createButton.nativeElement,'click').subscribe(
       (data) => {
         console.log(data);
         this.showItem(++this.count);
       }
     );
-  }
+  } */
 
   ngAfterViewInit(){
-    this.buttonCllicked();
+    // this.buttonCllicked();
   }
 
-  showItem(count){
+  /* showItem(count){
     let divElemnt = document.createElement('div');
     divElemnt.innerText = 'Item '+count;
     divElemnt.className = 'data-list';
     document.getElementById('container').appendChild(divElemnt);
-  }
+  } */
   
 }
