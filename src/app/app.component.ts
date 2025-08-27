@@ -1,58 +1,68 @@
-import { Component } from '@angular/core';
-import { Observable } from 'rxjs';
+import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { from, fromEvent, Observable, of } from 'rxjs';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements AfterViewInit{
   title = 'angular-observable';
   data: any[] = [];
+  array1 = [1,3,5,7,9];
+  array2 = ['a','b','c','f'];
+
+  @ViewChild('createButton') createButton: ElementRef;
+
+  createButtonObservable
+  count: number = 0;
+
+
+  
 
   // 1. Create an Observable
   // Observable
-  myObservable = new Observable( (observer) => {
-    // observer.next([1,2,4,5,67,7]); //Observable Emit a value
-    /* observer.next(1);
-    observer.next(2);
-    observer.next(3);
-    observer.next(4);
-    observer.next(5); */
+  // myObservable = new Observable( (observer) => {
+  //   // observer.next([1,2,4,5,67,7]); //Observable Emit a value
+  //   /* observer.next(1);
+  //   observer.next(2);
+  //   observer.next(3);
+  //   observer.next(4);
+  //   observer.next(5); */
 
-    // Observable
-    setTimeout(() => {
-      observer.next(1);
-    }, 1000);
-    setTimeout(() => {
-      observer.next(2);
-    }, 2000);
-    setTimeout(() => {
-      observer.next(3);
-    }, 3000);
-   /*  setTimeout(() => {
-      observer.error(new Error('Something went wrong please try later.'));
-    }, 3000); */
-    // After error, other subscribe functions will not work.
-    // Once error is emitted, no data or complete signal will not emitted.
+  //   // Observable
+  //   setTimeout(() => {
+  //     observer.next(1);
+  //   }, 1000);
+  //   setTimeout(() => {
+  //     observer.next(2);
+  //   }, 2000);
+  //   setTimeout(() => {
+  //     observer.next(3);
+  //   }, 3000);
+  //  /*  setTimeout(() => {
+  //     observer.error(new Error('Something went wrong please try later.'));
+  //   }, 3000); */
+  //   // After error, other subscribe functions will not work.
+  //   // Once error is emitted, no data or complete signal will not emitted.
 
-    setTimeout(() => {
-      observer.next(4);
-    }, 4000);
-    setTimeout(() => {
-      observer.next(5);
-    }, 5000);
+  //   setTimeout(() => {
+  //     observer.next(4);
+  //   }, 4000);
+  //   setTimeout(() => {
+  //     observer.next(5);
+  //   }, 5000);
     
 
-    // Complete method - signals completion of data stream
+  //   // Complete method - signals completion of data stream
 
-    setTimeout(() => {
-      observer.complete();
-    }, 6000);
+  //   setTimeout(() => {
+  //     observer.complete();
+  //   }, 6000);
 
-    // data stream will complete after 3 seconds.
-    // Other data streams will not work
-  });
+  //   // data stream will complete after 3 seconds.
+  //   // Other data streams will not work
+  // });
   
 
   getAsyncData(){
@@ -74,15 +84,47 @@ export class AppComponent {
 
     this.myObservable.subscribe({
       next:( val: any) =>{
-        this.data.push(val)
+        this.data.push(val);
+        console.log(val)
       },
       error(err){
         alert(err.message);
       },
       complete(){
-        alert('Complete message');
+        alert('All the data is streamed : Complete message');
       }
     })
 
   }
+
+  promise = new Promise( (resolve,reject)=>{
+    resolve([10,202,30,40,50]);
+  })
+  // myObservable = of(this.array1, this.array2, true, 'Hello',22);
+
+  // of() accept multiple parameters, and emit every params.
+  // from() emit by iterating the parameter.
+  myObservable = from(this.promise); // Only one parameter. This prameter should be iterable.
+
+
+  buttonCllicked(){
+    this.createButtonObservable = fromEvent(this.createButton.nativeElement,'click').subscribe(
+      (data) => {
+        console.log(data);
+        this.showItem(++this.count);
+      }
+    );
+  }
+
+  ngAfterViewInit(){
+    this.buttonCllicked();
+  }
+
+  showItem(count){
+    let divElemnt = document.createElement('div');
+    divElemnt.innerText = 'Item '+count;
+    divElemnt.className = 'data-list';
+    document.getElementById('container').appendChild(divElemnt);
+  }
+  
 }
