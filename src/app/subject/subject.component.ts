@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { AsyncSubject, BehaviorSubject, Observable, ReplaySubject, Subject } from 'rxjs';
 import { ajax } from 'rxjs/ajax'
 
 @Component({
@@ -39,9 +39,17 @@ export class SubjectComponent implements OnInit{
     */
 
 
-    let sub = new Subject();
+    // let sub = new Subject();
 
-    let behavSub = new BehaviorSubject<number>(100);
+    // let behavSub = new BehaviorSubject<number>(100);
+
+    /* let sub = new ReplaySubject(2); // All the subscribers get old emitted values.
+
+    sub.next(100);
+    sub.next(200);
+    sub.next(300);
+
+    console.log(sub)
     // Subject
     sub.subscribe( (data) => {
       console.log('sub1 :: ',data)
@@ -51,19 +59,25 @@ export class SubjectComponent implements OnInit{
     sub.subscribe( (data) => {
       console.log('sub2 :: ',data)
     }) 
-
-    behavSub.subscribe( (data) => {
-      console.log('behavSub 1 :: ',data)
+    sub.next(2020);
+    sub.subscribe( (data) => {
+      console.log('sub3 :: ',data)
     })
 
-    behavSub.next(2020);
+    sub.next(2023) */
 
-    // Initial value will be last emitted value.
-    behavSub.subscribe( (data) => {
-      console.log('behavSub 2 :: ',data)
-    })
+    // behavSub.subscribe( (data) => {
+    //   console.log('behavSub 1 :: ',data)
+    // })
 
-    behavSub.next(2023);
+    // behavSub.next(2020);
+
+    // // Initial value will be last emitted value.
+    // behavSub.subscribe( (data) => {
+    //   console.log('behavSub 2 :: ',data)
+    // })
+
+    // behavSub.next(2023);
 
     // sub.next(Math.random());
 
@@ -98,6 +112,26 @@ export class SubjectComponent implements OnInit{
 
     // Subject is a consumer of a value.
     data.subscribe(subject); */
+
+
+    // Async Subject
+    const asyncSubject = new AsyncSubject();
+    // Return the last emmitted value before the complete method.
+    // First complete function will be call, all other are ignored.
+
+    asyncSubject.next(100);
+    asyncSubject.next(200);
+    asyncSubject.next(300); // Only this value is emitted.
+    
+    asyncSubject.subscribe( data => {
+      console.log(`Sub 1 :: ${data}`);
+    })
+    asyncSubject.complete(); // AsyncSubject only emit the last value after observable completion.
+    asyncSubject.next(400); // This value not emitted
+
+    asyncSubject.subscribe( data => {
+      console.log(`Sub 2 :: ${data}`);
+    })
     
   }
 }
