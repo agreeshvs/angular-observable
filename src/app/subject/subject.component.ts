@@ -43,7 +43,8 @@ export class SubjectComponent implements OnInit{
 
     // let behavSub = new BehaviorSubject<number>(100);
 
-    /* let sub = new ReplaySubject(2); // All the subscribers get old emitted values.
+    /* 
+    let sub = new ReplaySubject(2); // All the subscribers get old emitted values.
 
     sub.next(100);
     sub.next(200);
@@ -114,7 +115,7 @@ export class SubjectComponent implements OnInit{
     data.subscribe(subject); */
 
 
-    // Async Subject
+    /* // Async Subject
     const asyncSubject = new AsyncSubject();
     // Return the last emmitted value before the complete method.
     // First complete function will be call, all other are ignored.
@@ -131,7 +132,33 @@ export class SubjectComponent implements OnInit{
 
     asyncSubject.subscribe( data => {
       console.log(`Sub 2 :: ${data}`);
-    })
+    }) */
+
+      //Promise and Observable.
+
+
+      const promise = new Promise( (resolve, reject)=>{
+        console.log('Promise is called'); // Always return data.
+        resolve(100);
+        resolve(1500); // Only emit one value
+        resolve(1050);
+      })
+
+      promise.then( data =>{
+        console.log('Data: ',data);
+      })
+
+      const obs = new Observable( (sub) =>{
+        console.log('Observable is called'); // Only emit data if subcriber is there.
+        sub.next(100);
+        sub.next('10dd0');
+        sub.next('454vfv');
+      }) // need to import RxJS
+
+
+      obs.subscribe( data => {
+        console.log('Data from obs : ',data)
+      });
     
   }
 }
